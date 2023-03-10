@@ -10,7 +10,7 @@ export class PlayersService {
   private players: Player[] = [];
 
   async getAllPlayers(): Promise<Player[]> {
-    return await this.players;
+    return this.players;
   }
 
   async getPlayerByEmail(email: string): Promise<Player> {
@@ -62,5 +62,13 @@ export class PlayersService {
     this.logger.log(`create : ${JSON.stringify(player)}`);
 
     this.players.push(player);
+  }
+
+  async deletePlayer(email: string): Promise<void> {
+    const foundPlayer = this.players.find((player) => player.email === email);
+
+    if (foundPlayer) {
+      this.players = this.players.filter((player) => player.email !== email);
+    }
   }
 }
