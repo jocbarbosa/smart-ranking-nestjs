@@ -9,8 +9,31 @@ export class PlayersService {
 
   private players: Player[] = [];
 
+  async getAllPlayers(): Promise<Player[]> {
+    return await this.players;
+  }
+
   async createOrUpdatePlayer(createPlayerDto: CreatePlayerDto): Promise<void> {
-    await this.createPlayer(createPlayerDto);
+    const { email } = createPlayerDto;
+
+    const foundPlayer = await this.players.find(
+      (player) => player.email === email,
+    );
+
+    if (foundPlayer) {
+      await this.updatePlayer(foundPlayer, createPlayerDto);
+    } else {
+      await this.createPlayer(createPlayerDto);
+    }
+  }
+
+  private async updatePlayer(
+    foundPlayer: Player,
+    createPlayerDto: CreatePlayerDto,
+  ): Promise<void> {
+    const { name } = createPlayerDto;
+
+    foundPlayer.name = name;
   }
 
   private createPlayer(createPlayerDto: CreatePlayerDto): void {
